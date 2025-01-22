@@ -223,9 +223,9 @@ async def info(ctx : disnake.ApplicationCommandInteraction):
             value = await cursor.fetchone()
             if value is not None:
                 CF_user = value[0]
-            if value[1] is not None:
-                score = value[1]
-            
+                if value[1] is not None:
+                    score = value[1]
+                
     info += f"# {CF_user}\n"
     
     if CF_user is not None:
@@ -390,10 +390,16 @@ async def set_challenge_channel(ctx : disnake.ApplicationCommandInteraction):
 async def complete_challenge(ctx : disnake.ApplicationCommandInteraction, rating : int):
     await ctx.response.defer()
     userID = ctx.author.id
-    cur_chall_date = datetime.datetime.now(tz=TIMEZONE).date()
-    curtime = datetime.datetime.now().time()
-    if curtime.replace(tzinfo=UTC) <= CHALLENGE_TIME:
-        cur_chall_date -= datetime.timedelta(days=1)
+    cur_chall_date = None
+        
+    async with sql.connect(DB) as db:
+        async with db.execute('SELECT data FROM app_data WHERE key = "last_challenge_date"') as cursor:
+            fetched = await cursor.fetchone()
+            
+            if fetched is None:
+                print("ERROR: last_challenge_date is not found in app_data table")
+            else:
+                cur_chall_date = datetime.date.fromisoformat(fetched[0])
     
     fetched = None
     fetched_problem = None
