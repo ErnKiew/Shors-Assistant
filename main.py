@@ -217,11 +217,14 @@ async def info(ctx : disnake.ApplicationCommandInteraction):
     
     # CF Username
     CF_user = None
+    score = 0
     async with sql.connect(DB) as db:
-        async with db.execute("SELECT codeforcesHandle FROM user_data WHERE userID = ?", (auth_id,)) as cursor:
+        async with db.execute("SELECT codeforcesHandle, score FROM user_data WHERE userID = ?", (auth_id,)) as cursor:
             value = await cursor.fetchone()
             if value is not None:
                 CF_user = value[0]
+            if value[1] is not None:
+                score = value[1]
             
     info += f"# {CF_user}\n"
     
@@ -248,10 +251,12 @@ async def info(ctx : disnake.ApplicationCommandInteraction):
             info += f"Rank: {rank}\n"
             info += f"Max Rank: {max_rank}\n"
     
+    info += f"Challenge Score: {score}\n"
+    
     info = info.strip()
     
     embed = disnake.Embed(
-        title= f"{CF_user}",
+        title= f"{auth.display_name}",
         description=f"{info}",
         color=disnake.Colour.blurple(),
         timestamp=datetime.datetime.now(),
