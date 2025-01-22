@@ -33,7 +33,7 @@ DB = "database.db"
 REQUEST_DELAY = 2 # Delay between requests
 
 # Settings
-CHALLENGE_TIME = datetime.time(hour=8, minute=53, second=50, tzinfo=UTC)
+CHALLENGE_TIME = datetime.time(hour=21, minute=0, second=0, tzinfo=UTC)
 CHALLENGE_RATINGS = [800, 1000, 1200, 1400, 1600, 1800, 2000, 2200, 2400, 2600, 2800, 3000, 3200, 3400]
 MIN_CHALLENGE_CONTEST_ID = 1000
 
