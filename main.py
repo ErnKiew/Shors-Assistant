@@ -279,8 +279,8 @@ async def register(ctx : disnake.ApplicationCommandInteraction, cf_handle : str)
     pset_result = res[1]
     
     avatar_url = ""
-    rank = ""
-    max_rank = ""
+    rank = None
+    max_rank = None
     
     # Handle user_result
     if isinstance(user_result, int):
@@ -293,8 +293,10 @@ async def register(ctx : disnake.ApplicationCommandInteraction, cf_handle : str)
         user_result = user_result["result"][0]
         
         avatar_url = user_result["avatar"]
-        rank = user_result["rank"]
-        max_rank = user_result["maxRank"]
+        if rank in user_result:
+            rank = user_result["rank"]
+        if max_rank in user_result:
+            max_rank = user_result["maxRank"]
         
     # Pick random problem
     if isinstance(pset_result, int):
